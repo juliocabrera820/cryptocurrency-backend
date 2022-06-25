@@ -1,0 +1,51 @@
+name: Rails tests
+on: push
+
+jobs:
+  test:
+    name: Build
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install dependencies
+        run: |
+          sudo apt-get install libpq-dev
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+      - name: Set up test database
+        env:
+          RAILS_ENV: test
+          PGHOST: localhost
+          POSTGRES_DB: cryptocurrencies_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        run: |
+          cp config/database.ci.yml config/database.yml
+          bundle exec rails db:create && bundle exec rails db:migrate RAILS_ENV=test
+      - name: Run tests
+        env:
+          PGHOST: localhost
+          POSTGRES_DB: cryptocurrencies_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPORT: ${{ job.services.postgres.ports[5432] }}
+          RAILS_ENV: test
+        run: bundle exec rspec spec
