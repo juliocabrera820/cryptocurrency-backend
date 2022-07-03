@@ -1,4 +1,4 @@
-class Cryptocurrency::CryptocurrenciesService < ApplicationService
+class CoinGecko::FetchCryptocurrencies < ApplicationService
   include HTTParty
 
   BASE_URI = 'https://api.coingecko.com/api/v3/'.freeze

@@ -10,21 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_25_032711) do
+ActiveRecord::Schema.define(version: 2022_07_03_173542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "cryptocurrencies", force: :cascade do |t|
+  create_table "coins", force: :cascade do |t|
     t.string "name"
     t.string "symbol"
     t.string "image_url"
-    t.string "current_price"
-    t.string "market_capital"
-    t.string "total_volume"
-    t.string "market_capital_ranking"
-    t.string "higher_in_24_hours"
-    t.string "lower_in_24_hrs"
+    t.decimal "current_price"
+    t.decimal "market_capital"
+    t.decimal "total_volume"
+    t.integer "market_capital_ranking"
+    t.decimal "higher_in_24_hours"
+    t.decimal "lower_in_24_hrs"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
