@@ -51,3 +51,6 @@ gem 'httparty'
 # serializer
 gem 'active_model_serializers'
 
+# validations
+gem 'dry-validation'
+
